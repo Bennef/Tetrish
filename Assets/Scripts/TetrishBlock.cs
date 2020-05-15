@@ -14,7 +14,15 @@ public class TetrishBlock : MonoBehaviour
     public float fallTime = 0.8f;
     
     private static Transform[,] grid = new Transform[width, height];
+
+    private AudioSource aSrc;
+    public AudioClip rotate, clearLine, GameOver, blockLand;
 	
+    void Start()
+    {
+        aSrc = GetComponent<AudioSource>();
+    }
+
 	/// <summary>
     /// Handles input for the tetromino currently in play. 
     /// </summary>
@@ -43,6 +51,8 @@ public class TetrishBlock : MonoBehaviour
             {
                 transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
             }
+            aSrc.clip = rotate;
+            aSrc.Play();
         }
 
         if (Time.time - previousTime > (Input.GetKey(KeyCode.DownArrow) ? fallTime / 10 : fallTime))
@@ -105,6 +115,8 @@ public class TetrishBlock : MonoBehaviour
             Destroy(grid[j, i].gameObject);
             grid[j, i] = null;
         }
+        aSrc.clip = clearLine;
+        aSrc.Play();
     }
 
     /// <summary>
