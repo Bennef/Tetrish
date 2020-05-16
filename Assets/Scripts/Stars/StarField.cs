@@ -16,12 +16,14 @@ public class StarField : MonoBehaviour
 
     ParticleSystem Particles;
     ParticleSystem.Particle[] Stars;
-
-
+    
     public float theScrollSpeed = 0.025f;
 
     Transform stars;
 
+    /// <summary>
+    /// 
+    /// </summary>
     void Awake()
     {
         stars = gameObject.transform;
@@ -31,22 +33,24 @@ public class StarField : MonoBehaviour
 
         Assert.IsNotNull(Particles, "Particle system missing from object!");
 
-        xOffset = FieldWidth * 0.5f;                                                                                                        // Offset the coordinates to distribute the spread
-        yOffset = FieldHeight * 0.5f;                                                                                                       // around the object's center
+        xOffset = FieldWidth * 0.5f;  // Offset the coordinates to distribute the spread
+        yOffset = FieldHeight * 0.5f; // around the object's center
 
         for (int i = 0; i < MaxStars; i++)
         {
-            float randSize = Random.Range(StarSizeRange, StarSizeRange + 1f);                       // Randomize star size within parameters
-            float scaledColor = (true == Colorize) ? randSize - StarSizeRange : 1f;         // If coloration is desired, color based on size
+            float randSize = Random.Range(StarSizeRange, StarSizeRange + 1f); // Randomize star size within parameters
+            float scaledColor = (true == Colorize) ? randSize - StarSizeRange : 1f; // If coloration is desired, color based on size
 
             Stars[i].position = GetRandomInRectangle(FieldWidth, FieldHeight) + transform.position;
             Stars[i].startSize = StarSize * randSize;
             Stars[i].startColor = new Color(1f, scaledColor, scaledColor, 1f);
         }
-        Particles.SetParticles(Stars, Stars.Length);                                                                // Write data to the particle system
+        Particles.SetParticles(Stars, Stars.Length); // Write data to the particle system
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     void Update()
     {
         stars.position = new Vector3(stars.position.x, stars.position.y - theScrollSpeed, stars.position.z);
@@ -76,16 +80,16 @@ public class StarField : MonoBehaviour
         }
         Particles.SetParticles(Stars, Stars.Length);
 
-        Vector3 newPos = stars.position * ParallaxFactor;                   // Calculate the position of the object
-        //newPos.z = 0;                       // Force Z-axis to zero, since we're in 2D
+        Vector3 newPos = stars.position * ParallaxFactor; // Calculate the position of the object
         transform.position = newPos;
-
     }
 
-    // GetRandomInRectangle
-    //----------------------------------------------------------
-    // Get a random value within a certain rectangle area
-    //
+    /// <summary>
+    /// Get a random value within a certain rectangle area.
+    /// </summary>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <returns></returns>
     Vector3 GetRandomInRectangle(float width, float height)
     {
         float x = Random.Range(0, width);

@@ -64,6 +64,8 @@ public class TetrishBlock : MonoBehaviour
                 AddToGrid();
                 CheckForLines();
 
+                aSrc.clip = blockLand;
+                aSrc.Play();
                 this.enabled = false;
                 FindObjectOfType<SpawnTetromino>().NewTetromino();
             }

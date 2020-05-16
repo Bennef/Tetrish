@@ -10,7 +10,7 @@ public class SpawnTetromino : MonoBehaviour
 	/// <summary>
     /// Spawn a tetromino at the start of the game.
     /// </summary>
-	void Start ()
+	void Start()
     {
         NewTetromino();
     }
