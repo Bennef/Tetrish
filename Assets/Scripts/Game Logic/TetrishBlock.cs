@@ -78,14 +78,23 @@ public class TetrishBlock : MonoBehaviour
     /// </summary>
     void CheckForLines()
     {
+        int lineCounter = 0;
         for (int i = height-1; i >=0; i--)
         {
             if (HasLine(i))
             {
                 DeleteLine(i);
                 RowDown(i);
+                lineCounter++;
             }
         }
+
+        // If we have more than one line, update the score.
+        if (lineCounter > 0)
+        {
+            FindObjectOfType<ScoreManager>().AddToScore(lineCounter);
+        }
+        Debug.Log(lineCounter);
     }
 
     /// <summary>
