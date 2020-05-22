@@ -159,7 +159,7 @@ GameObject:
   - component: {fileID: 82864046402664050}
   m_Layer: 0
   m_Name: Blue Ricky
-  m_TagString: Untagged
+  m_TagString: Tetromino
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -728,9 +728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75c8b8284a7380546a98d56a3ffeef37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationPoint: {x: 0, y: 0, z: 0}
-  fallTime: 0.8
   rotate: {fileID: 8300000, guid: c212673173308814eadf7cc920127837, type: 3}
   clearLine: {fileID: 8300000, guid: d9da1a14324a2b8479744ba98daa6561, type: 3}
-  GameOver: {fileID: 8300000, guid: 105d9cc23d2c5524fac7b9d2de82c65d, type: 3}
+  gameOver: {fileID: 8300000, guid: 105d9cc23d2c5524fac7b9d2de82c65d, type: 3}
   blockLand: {fileID: 8300000, guid: 1fb8cb8766cab59478e605ed7db757e2, type: 3}

@@ -1,30 +1,37 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Handles the behaviour of the current active tetromino object. Checks for valid moves, if a line should be cleared, etc.
 /// </summary>
 public class TetrishBlock : MonoBehaviour
 {
-    public static int height = 20;
-    public static int width = 10;
+    private static int height = 20;
+    private static int width = 10;
 
-    public Vector3 rotationPoint;
+    private Vector3 rotationPoint;
 
     private float previousTime;
-    public float fallTime;
+    private float fallTime = 0.8f;
     
     private static Transform[,] grid = new Transform[width, height];
 
-    public ScoreManager scoreManager;
+    private GameManager gameManager;
+    private SpawnTetromino spawner;
 
     private AudioSource aSrc;
-    public AudioClip rotate, clearLine, GameOver, blockLand;
-	
+    public AudioClip rotate, blockLand;
+   
+
+    /// <summary>
+    /// Set up references.
+    /// </summary>
     void OnEnable()
     {
         aSrc = GetComponent<AudioSource>();
-        scoreManager = FindObjectOfType<ScoreManager>();
-        fallTime = scoreManager.fallTime;
+        gameManager = FindObjectOfType<GameManager>();
+        spawner = FindObjectOfType<SpawnTetromino>();
+        fallTime = gameManager.fallTime;
     }
 
 	/// <summary>
@@ -71,7 +78,14 @@ public class TetrishBlock : MonoBehaviour
                 aSrc.clip = blockLand;
                 aSrc.Play();
                 this.enabled = false;
-                FindObjectOfType<SpawnTetromino>().NewTetromino();
+                if (GameOverCheck())
+                {
+                    gameManager.GameOver();
+                }
+                else
+                {
+                    spawner.NewTetromino();
+                }
             }
             previousTime = Time.time;
         }
@@ -96,7 +110,7 @@ public class TetrishBlock : MonoBehaviour
         // If we have more than one line, update the score.
         if (lineCounter > 0)
         {
-            scoreManager.AddToScore(lineCounter);
+            gameManager.AddToScore(lineCounter);
         }
     }
 
@@ -114,7 +128,6 @@ public class TetrishBlock : MonoBehaviour
                 return false;
             }
         }
-
         return true;
     }
 
@@ -168,7 +181,7 @@ public class TetrishBlock : MonoBehaviour
     /// <summary>
     /// Checks to see if the move is valid. If move is not valid we reverse the move.
     /// </summary>
-    /// <returns>True if move is valid, flase if not.</returns>
+    /// <returns>True if move is valid, false if not.</returns>
     bool ValidMove()
     {
         foreach (Transform children in transform)
@@ -186,7 +199,22 @@ public class TetrishBlock : MonoBehaviour
                 return false;
             }
         }
-
         return true;
+    }
+
+    /// <summary>
+    /// Check if there is a block already in the grid at the spawn location.
+    /// </summary>
+    /// /// <returns>True if block in the way, false if not.</returns>
+    public bool GameOverCheck()
+    {
+        if (grid[4, 18] != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
