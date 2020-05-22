@@ -94,7 +94,7 @@ public class TetrishBlock : MonoBehaviour
         {
             FindObjectOfType<ScoreManager>().AddToScore(lineCounter);
         }
-        Debug.Log(lineCounter);
+        //Debug.Log(lineCounter);
     }
 
     /// <summary>
