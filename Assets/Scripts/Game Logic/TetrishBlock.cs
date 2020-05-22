@@ -11,22 +11,26 @@ public class TetrishBlock : MonoBehaviour
     public Vector3 rotationPoint;
 
     private float previousTime;
-    public float fallTime = 0.8f;
+    public float fallTime;
     
     private static Transform[,] grid = new Transform[width, height];
+
+    public ScoreManager scoreManager;
 
     private AudioSource aSrc;
     public AudioClip rotate, clearLine, GameOver, blockLand;
 	
-    void Start()
+    void OnEnable()
     {
         aSrc = GetComponent<AudioSource>();
+        scoreManager = FindObjectOfType<ScoreManager>();
+        fallTime = scoreManager.fallTime;
     }
 
 	/// <summary>
     /// Handles input for the tetromino currently in play. 
     /// </summary>
-	void Update ()
+	void Update()
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
@@ -92,9 +96,8 @@ public class TetrishBlock : MonoBehaviour
         // If we have more than one line, update the score.
         if (lineCounter > 0)
         {
-            FindObjectOfType<ScoreManager>().AddToScore(lineCounter);
+            scoreManager.AddToScore(lineCounter);
         }
-        //Debug.Log(lineCounter);
     }
 
     /// <summary>
@@ -126,8 +129,6 @@ public class TetrishBlock : MonoBehaviour
             Destroy(grid[j, i].gameObject);
             grid[j, i] = null;
         }
-        aSrc.clip = clearLine;
-        aSrc.Play();
     }
 
     /// <summary>
