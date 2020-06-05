@@ -17,11 +17,11 @@ namespace Tetrish
         private Text levelText;
         private Text gameOverText;
 
-        public float fallTime = 0.8f;
-
-        public bool gameIsOver = false;
+        private bool gameIsOver = false;
 
         private SpawnTetromino spawner;
+
+        public float fallTime = 0.8f;
 
         private AudioSource aSrc;
         public AudioClip clearLine, gameOver, levelUp;
@@ -40,19 +40,14 @@ namespace Tetrish
             aSrc = GetComponent<AudioSource>();
         }
 
-
+        /// <summary>
+        /// Check for input when the game is over.
+        /// </summary>
         void Update()
         {
             if (gameIsOver && Input.anyKeyDown)
             {
-                gameIsOver = false;
-                currentScore = 0;
-                scoreText.text = currentScore.ToString();
-                currentLevel = 0;
-                levelText.text = currentLevel.ToString();
-                ClearGrid();
-                gameOverText.enabled = false;
-                spawner.NewTetromino();
+                ResetGame();
             }
         }
 
@@ -145,6 +140,21 @@ namespace Tetrish
         {
             yield return new WaitForSeconds(2);
             gameIsOver = true;
+        }
+
+        /// <summary>
+        /// Reset all the values and text and spawn a new Tetromino to restart the game.
+        /// </summary>
+        public void ResetGame()
+        {
+            gameIsOver = false;
+            currentScore = 0;
+            scoreText.text = currentScore.ToString();
+            currentLevel = 0;
+            levelText.text = currentLevel.ToString();
+            ClearGrid();
+            gameOverText.enabled = false;
+            spawner.NewTetromino();
         }
     }
 }

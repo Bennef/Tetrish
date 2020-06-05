@@ -37,9 +37,17 @@ namespace Tetrish
         }
 
         /// <summary>
-        /// Handles input for the tetromino currently in play. 
+        /// Handle the input every frame.
         /// </summary>
         void Update()
+        {
+            HandleInput();
+        }
+
+        /// <summary>
+        /// Handle any key presses and move the tetrominos if the move is valid.
+        /// </summary>
+        public void HandleInput()
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
@@ -70,26 +78,34 @@ namespace Tetrish
 
             if (Time.time - previousTime > (Input.GetKey(KeyCode.DownArrow) ? fallTime / 10 : fallTime))
             {
-                transform.position += new Vector3(0, -1, 0);
-                if (!ValidMove())
-                {
-                    transform.position -= new Vector3(0, -1, 0);
-                    AddToGrid();
-                    CheckForLines();
-
-                    aSrc.clip = blockLand;
-                    aSrc.Play();
-                    this.enabled = false;
-                    if (GameOverCheck())
-                    {
-                        gameManager.GameOver();
-                    }
-                    else
-                    {
-                        spawner.NewTetromino();
-                    }
-                }
+                MoveTetrominoDown();
                 previousTime = Time.time;
+            }
+        }
+        
+        /// <summary>
+        /// Move tetromino down one gris square and check if the move is valid. 
+        /// </summary>
+        public void MoveTetrominoDown()
+        {
+            transform.position += new Vector3(0, -1, 0);
+            if (!ValidMove())
+            {
+                transform.position -= new Vector3(0, -1, 0);
+                AddToGrid();
+                CheckForLines();
+
+                aSrc.clip = blockLand;
+                aSrc.Play();
+                this.enabled = false;
+                if (GameOverCheck())
+                {
+                    gameManager.GameOver();
+                }
+                else
+                {
+                    spawner.NewTetromino();
+                }
             }
         }
 
@@ -109,7 +125,7 @@ namespace Tetrish
                 }
             }
 
-            // If we have more than one line, update the score.
+            // If we have at least one line, update the score.
             if (lineCounter > 0)
             {
                 gameManager.AddToScore(lineCounter);
