@@ -66,7 +66,7 @@ namespace Tetrish
                 currentScore += lines * 40;
             }
 
-            scoreText.text = currentScore.ToString();
+            SetScoreText(currentScore);
 
             aSrc.clip = clearLine;
             aSrc.Play();
@@ -106,7 +106,7 @@ namespace Tetrish
                 fallTime = 0.7f;
             }
 
-            levelText.text = currentLevel.ToString();
+            SetLevelText(currentLevel);
         }
 
         /// <summary>
@@ -115,9 +115,9 @@ namespace Tetrish
         public void ClearGrid()
         {
             GameObject[] blocks = GameObject.FindGameObjectsWithTag("Tetromino");
-            foreach (GameObject obj in blocks)
+            foreach (GameObject block in blocks)
             {
-                Destroy(obj);
+                Destroy(block);
             }
         }
 
@@ -148,13 +148,27 @@ namespace Tetrish
         public void ResetGame()
         {
             gameIsOver = false;
-            currentScore = 0;
-            scoreText.text = currentScore.ToString();
-            currentLevel = 0;
-            levelText.text = currentLevel.ToString();
-            ClearGrid();
             gameOverText.enabled = false;
+            SetScoreText(0);
+            SetLevelText(0);
+            ClearGrid();
             spawner.NewTetromino();
+        }
+
+        /// <summary>
+        /// Update the Level UI value to feed back to the player.
+        /// </summary>
+        public void SetLevelText(int level)
+        {
+            levelText.text = level.ToString();
+        }
+
+        /// <summary>
+        /// Update the Score UI value to feed back to the player.
+        /// </summary>
+        public void SetScoreText(int score)
+        {
+            scoreText.text = score.ToString();
         }
     }
 }
