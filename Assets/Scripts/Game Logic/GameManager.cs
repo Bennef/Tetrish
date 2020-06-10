@@ -23,8 +23,7 @@ namespace Tetrish
 
         public float fallTime = 0.8f;
 
-        private AudioSource aSrc;
-        public AudioClip clearLine, gameOver, levelUp;
+        private SFXManager sFXManager;
 
         /// <summary>
         /// Reference the UI text elements, the spawner and the audioSource.
@@ -37,7 +36,7 @@ namespace Tetrish
 
             spawner = FindObjectOfType<SpawnTetromino>();
 
-            aSrc = GetComponent<AudioSource>();
+            sFXManager = FindObjectOfType<SFXManager>();
         }
 
         /// <summary>
@@ -68,8 +67,7 @@ namespace Tetrish
 
             SetScoreText(currentScore);
 
-            aSrc.clip = clearLine;
-            aSrc.Play();
+            sFXManager.PlaySound(sFXManager.clearLine);
 
             SetLevel();
         }
@@ -126,8 +124,7 @@ namespace Tetrish
         /// </summary>
         public void GameOver()
         {
-            aSrc.clip = gameOver;
-            aSrc.Play();
+            sFXManager.PlaySound(sFXManager.gameOver);
             gameOverText.enabled = true;
             StartCoroutine(GameOverDelay());
         }

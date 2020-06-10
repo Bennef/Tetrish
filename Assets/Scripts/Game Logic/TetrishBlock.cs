@@ -20,9 +20,7 @@ namespace Tetrish
 
         private GameManager gameManager;
         private SpawnTetromino spawner;
-
-        private AudioSource aSrc;
-        public AudioClip rotate, blockLand;
+        private SFXManager sFXManager;
 
 
         /// <summary>
@@ -30,7 +28,7 @@ namespace Tetrish
         /// </summary>
         void OnEnable()
         {
-            aSrc = GetComponent<AudioSource>();
+            sFXManager = FindObjectOfType<SFXManager>();
             gameManager = FindObjectOfType<GameManager>();
             spawner = FindObjectOfType<SpawnTetromino>();
             fallTime = gameManager.fallTime;
@@ -72,8 +70,7 @@ namespace Tetrish
                 {
                     transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
                 }
-                aSrc.clip = rotate;
-                aSrc.Play();
+                sFXManager.PlaySound(sFXManager.rotate);
             }
 
             if (Time.time - previousTime > (Input.GetButton("Down") ? fallTime / 10 : fallTime))
@@ -92,12 +89,14 @@ namespace Tetrish
             if (!ValidMove())
             {
                 transform.position -= new Vector3(0, -1, 0);
+
+                sFXManager.PlaySound(sFXManager.blockLand);
+
                 AddToGrid();
                 CheckForLines();
-
-                aSrc.clip = blockLand;
-                aSrc.Play();
+                                
                 this.enabled = false;
+
                 if (GameOverCheck())
                 {
                     gameManager.GameOver();
