@@ -49,7 +49,7 @@ namespace Tetrish
         /// </summary>
         public void HandleInput()
         {
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetButtonDown("Move Left"))
             {
                 transform.position += new Vector3(-1, 0, 0);
                 if (!ValidMove())
@@ -57,7 +57,7 @@ namespace Tetrish
                     transform.position -= new Vector3(-1, 0, 0);
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            else if (Input.GetButtonDown("Move Right"))
             {
                 transform.position += new Vector3(1, 0, 0);
                 if (!ValidMove())
@@ -65,7 +65,7 @@ namespace Tetrish
                     transform.position -= new Vector3(1, 0, 0);
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.UpArrow))
+            else if (Input.GetButtonDown("Rotate"))
             {
                 transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
                 if (!ValidMove())
@@ -76,7 +76,7 @@ namespace Tetrish
                 aSrc.Play();
             }
 
-            if (Time.time - previousTime > (Input.GetKey(KeyCode.DownArrow) ? fallTime / 10 : fallTime))
+            if (Time.time - previousTime > (Input.GetButton("Down") ? fallTime / 10 : fallTime))
             {
                 MoveTetrominoDown();
                 previousTime = Time.time;
