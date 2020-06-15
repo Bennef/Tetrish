@@ -35,8 +35,9 @@ namespace Tetrish
             gameOverText = GameObject.Find("Game Over Text").GetComponent<Text>();
 
             spawner = FindObjectOfType<SpawnTetromino>();
-
             sFXManager = FindObjectOfType<SFXManager>();
+
+            spawner.NewTetromino();
         }
 
         /// <summary>

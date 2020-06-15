@@ -11,8 +11,7 @@ public class StarField : MonoBehaviour
     public bool Colorize = false;
     public float ParallaxFactor = 0f;
 
-    float xOffset;
-    float yOffset;
+    float xOffset, yOffset;
 
     ParticleSystem Particles;
     ParticleSystem.Particle[] Stars;

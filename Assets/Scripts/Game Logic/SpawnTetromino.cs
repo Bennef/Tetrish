@@ -9,13 +9,6 @@ namespace Tetrish
     {
         public GameObject[] Tetrominos;
 
-        /// <summary>
-        /// Spawn a tetromino at the start of the game.
-        /// </summary>
-        void Start()
-        {
-            NewTetromino();
-        }
 
         /// <summary>
         /// Spawn a random tetromino at the top of the screen.
