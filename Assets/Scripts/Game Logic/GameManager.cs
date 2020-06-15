@@ -56,14 +56,7 @@ namespace Tetrish
         /// <param name="lines"></param>
         public void AddToScore(int lines)
         {
-            if (currentLevel > 0)
-            {
-                currentScore += lines * currentLevel * 40;
-            }
-            else
-            {
-                currentScore += lines * 40;
-            }
+            currentScore = currentLevel > 0 ? currentScore += lines * currentLevel * 40 : currentScore += lines * 40;
 
             SetScoreText(currentScore);
 

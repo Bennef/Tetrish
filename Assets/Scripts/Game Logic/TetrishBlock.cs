@@ -8,8 +8,8 @@ namespace Tetrish
     /// </summary>
     public class TetrishBlock : MonoBehaviour
     {
-        private static int height = 20;
-        private static int width = 10;
+        private static readonly int height = 20;
+        private static readonly int width = 10;
 
         private Vector3 rotationPoint;
 
@@ -89,14 +89,11 @@ namespace Tetrish
             if (!ValidMove())
             {
                 transform.position -= new Vector3(0, -1, 0);
-
                 sFXManager.PlaySound(sFXManager.blockLand);
 
                 AddToGrid();
                 CheckForLines();
                                 
-                this.enabled = false;
-
                 if (GameOverCheck())
                 {
                     gameManager.GameOver();
@@ -105,6 +102,7 @@ namespace Tetrish
                 {
                     spawner.NewTetromino();
                 }
+                this.enabled = false;
             }
         }
 
@@ -206,12 +204,7 @@ namespace Tetrish
                 int roundedX = Mathf.RoundToInt(children.transform.position.x);
                 int roundedY = Mathf.RoundToInt(children.transform.position.y);
 
-                if (roundedX < 0 || roundedX >= width || roundedY < 0 || roundedY >= height)
-                {
-                    return false;
-                }
-
-                if (grid[roundedX, roundedY] != null)
+                if (roundedX < 0 || roundedX >= width || roundedY < 0 || roundedY >= height || grid[roundedX, roundedY] != null)
                 {
                     return false;
                 }
@@ -229,10 +222,7 @@ namespace Tetrish
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }
