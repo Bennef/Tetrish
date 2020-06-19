@@ -21,4 +21,9 @@ public class InputHandler : MonoBehaviour
     {
         return Input.GetButton("Down");
     }
+
+    public bool GetAnyKeyDown()
+    {
+        return Input.anyKeyDown;
+    }
 }

@@ -14,13 +14,11 @@ namespace Tetrish
 
         private int currentScore = 0;
         private int currentLevel = 0;
-        private Text scoreText;
-        private Text levelText;
-        private Text gameOverText;
         private bool gameIsOver = false;
         private SpawnTetromino spawner;
         private float fallTime = 0.8f;
         private SFXManager sFXManager;
+        private UIManager uIManager;
 
         public float FallTime => fallTime;
 
@@ -29,13 +27,9 @@ namespace Tetrish
         /// </summary>
         void Start()
         {
-            scoreText = GameObject.Find("Score Text").GetComponent<Text>();
-            levelText = GameObject.Find("Level Text").GetComponent<Text>();
-            gameOverText = GameObject.Find("Game Over Text").GetComponent<Text>();
-
             spawner = FindObjectOfType<SpawnTetromino>();
             sFXManager = FindObjectOfType<SFXManager>();
-
+            uIManager = FindObjectOfType<UIManager>();
             spawner.NewTetromino();
         }
 
@@ -44,7 +38,7 @@ namespace Tetrish
         /// </summary>
         void Update()
         {
-            if (gameIsOver && Input.anyKeyDown)
+            if (gameIsOver && inputHandler.GetAnyKeyDown())
             {
                 ResetGame();
             }
@@ -57,11 +51,8 @@ namespace Tetrish
         public void AddToScore(int lines)
         {
             currentScore = currentLevel > 0 ? currentScore += lines * currentLevel * 40 : currentScore += lines * 40;
-
-            SetScoreText(currentScore);
-
-            sFXManager.PlaySound(sFXManager.ClearLine);
-
+            uIManager.SetText(uIManager.ScoreText, currentScore.ToString());            
+            sFXManager.PlaySound(sFXManager.clearLine);
             SetLevel();
         }
 
@@ -96,8 +87,7 @@ namespace Tetrish
                 currentLevel = 1;
                 fallTime = 0.7f;
             }
-
-            SetLevelText(currentLevel);
+            uIManager.SetText(uIManager.LevelText, currentLevel.ToString());
         }
 
         /// <summary>
@@ -117,8 +107,8 @@ namespace Tetrish
         /// </summary>
         public void GameOver()
         {
-            sFXManager.PlaySound(sFXManager.GameOver);
-            gameOverText.enabled = true;
+            sFXManager.PlaySound(sFXManager.gameOver);
+            uIManager.ShowText(uIManager.GameOverText);
             StartCoroutine(GameOverDelay());
         }
 
@@ -138,27 +128,11 @@ namespace Tetrish
         public void ResetGame()
         {
             gameIsOver = false;
-            gameOverText.enabled = false;
-            SetScoreText(0);
-            SetLevelText(0);
+            uIManager.HideText(uIManager.GameOverText);
+            uIManager.SetText(uIManager.ScoreText, "0");
+            uIManager.SetText(uIManager.LevelText, "0");
             ClearGrid();
             spawner.NewTetromino();
-        }
-
-        /// <summary>
-        /// Update the Level UI value to feed back to the player.
-        /// </summary>
-        public void SetLevelText(int level)
-        {
-            levelText.text = level.ToString();
-        }
-
-        /// <summary>
-        /// Update the Score UI value to feed back to the player.
-        /// </summary>
-        public void SetScoreText(int score)
-        {
-            scoreText.text = score.ToString();
         }
     }
 }

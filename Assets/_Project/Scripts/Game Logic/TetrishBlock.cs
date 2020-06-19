@@ -1,17 +1,13 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Tetrish
 {
-
     /// <summary>
     /// Handles the behaviour of the current active tetromino object. Checks for valid moves, if a line should be cleared, etc.
     /// </summary>
     public class TetrishBlock : MonoBehaviour
     {
-        [SerializeField]
-        InputHandler inputHandler;
-
+        private InputHandler inputHandler;
         private static readonly int height = 20;
         private static readonly int width = 10;
         private Vector3 rotationPoint;
@@ -20,7 +16,7 @@ namespace Tetrish
         private static Transform[,] grid = new Transform[width, height];
         private GameManager gameManager;
         private SpawnTetromino spawner;
-        private SFXManager sFXManager;
+        public SFXManager sFXManager;
 
 
         /// <summary>
@@ -31,18 +27,14 @@ namespace Tetrish
             sFXManager = FindObjectOfType<SFXManager>();
             gameManager = FindObjectOfType<GameManager>();
             spawner = FindObjectOfType<SpawnTetromino>();
+            inputHandler = FindObjectOfType<InputHandler>();
             fallTime = gameManager.FallTime;
         }
 
         /// <summary>
         /// Handle the input every frame.
         /// </summary>
-        void Update() => HandleInput();
-        
-        /// <summary>
-        /// Handle any key presses and move the tetrominos if the move is valid.
-        /// </summary>
-        private void HandleInput()
+        void Update()
         {
             if (inputHandler.GetLeftButtonDown())
             {
@@ -59,10 +51,10 @@ namespace Tetrish
 
             if (Time.time - previousTime > (inputHandler.GetDownButtonDown() ? fallTime / 10 : fallTime))
             {
-                MoveTetrominoDown();                
+                MoveTetrominoDown();
             }
         }
-
+            
         private void MoveLeft()
         {
             transform.position += new Vector3(-1, 0, 0);
@@ -88,7 +80,7 @@ namespace Tetrish
             {
                 transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
             }
-            sFXManager.PlaySound(sFXManager.Rotate);
+            sFXManager.PlaySound(sFXManager.rotate);
         }
 
         /// <summary>
@@ -100,7 +92,7 @@ namespace Tetrish
             if (!ValidMove())
             {
                 transform.position -= new Vector3(0, -1, 0);
-                sFXManager.PlaySound(sFXManager.BlockLand);
+                sFXManager.PlaySound(sFXManager.blockLand);
 
                 AddToGrid();
                 CheckForLines();
