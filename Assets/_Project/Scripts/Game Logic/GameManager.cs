@@ -4,26 +4,25 @@ using UnityEngine.UI;
 
 namespace Tetrish
 {
-
     /// <summary>
     /// Manages the current score.
     /// </summary>
     public class GameManager : MonoBehaviour
     {
+        [SerializeField]
+        InputHandler inputHandler;
+
         private int currentScore = 0;
         private int currentLevel = 0;
-
         private Text scoreText;
         private Text levelText;
         private Text gameOverText;
-
         private bool gameIsOver = false;
-
         private SpawnTetromino spawner;
-
-        public float fallTime = 0.8f;
-
+        private float fallTime = 0.8f;
         private SFXManager sFXManager;
+
+        public float FallTime => fallTime;
 
         /// <summary>
         /// Reference the UI text elements, the spawner and the audioSource.
@@ -61,7 +60,7 @@ namespace Tetrish
 
             SetScoreText(currentScore);
 
-            sFXManager.PlaySound(sFXManager.clearLine);
+            sFXManager.PlaySound(sFXManager.ClearLine);
 
             SetLevel();
         }
@@ -118,7 +117,7 @@ namespace Tetrish
         /// </summary>
         public void GameOver()
         {
-            sFXManager.PlaySound(sFXManager.gameOver);
+            sFXManager.PlaySound(sFXManager.GameOver);
             gameOverText.enabled = true;
             StartCoroutine(GameOverDelay());
         }
