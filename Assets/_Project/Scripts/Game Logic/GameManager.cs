@@ -1,26 +1,22 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Tetrish
 {
     /// <summary>
-    /// Manages the current score.
+    /// Manages the Game events.
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        [SerializeField]
-        InputHandler inputHandler;
-
         private int currentScore = 0;
         private int currentLevel = 0;
         private bool gameIsOver = false;
         private SpawnTetromino spawner;
-        private float fallTime = 0.8f;
         private SFXManager sFXManager;
         private UIManager uIManager;
+        private InputHandler inputHandler;
 
-        public float FallTime => fallTime;
+        public float FallTime { get; set; } = 0.8f;
 
         /// <summary>
         /// Reference the UI text elements, the spawner and the audioSource.
@@ -30,6 +26,7 @@ namespace Tetrish
             spawner = FindObjectOfType<SpawnTetromino>();
             sFXManager = FindObjectOfType<SFXManager>();
             uIManager = FindObjectOfType<UIManager>();
+            inputHandler = FindObjectOfType<InputHandler>();
             spawner.NewTetromino();
         }
 
@@ -64,30 +61,35 @@ namespace Tetrish
         {
             if (currentScore >= 1000)
             {
-                currentLevel = 5;
-                fallTime = 0.3f;
+                SetLevel(5);
+                FallTime = 0.3f;
             }
             else if (currentScore >= 800)
             {
-                currentLevel = 4;
-                fallTime = 0.4f;
+                SetLevel(4);
+                FallTime = 0.4f;
             }
             else if (currentScore >= 600)
             {
-                currentLevel = 3;
-                fallTime = 0.5f;
+                SetLevel(3);
+                FallTime = 0.5f;
             }
             else if (currentScore >= 200)
             {
-                currentLevel = 2;
-                fallTime = 0.6f;
+                SetLevel(2);
+                FallTime = 0.6f;
             }
             else if (currentScore >= 100)
             {
-                currentLevel = 1;
-                fallTime = 0.7f;
+                SetLevel(1);
+                FallTime = 0.7f;
             }
             uIManager.SetText(uIManager.LevelText, currentLevel.ToString());
+        }
+
+        private void SetLevel(int levelToSet)
+        {
+            currentLevel = levelToSet;
         }
 
         /// <summary>

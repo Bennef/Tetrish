@@ -18,7 +18,6 @@ namespace Tetrish
         private SpawnTetromino spawner;
         public SFXManager sFXManager;
 
-
         /// <summary>
         /// Set up references.
         /// </summary>
@@ -192,7 +191,6 @@ namespace Tetrish
             {
                 int roundedX = Mathf.RoundToInt(children.transform.position.x);
                 int roundedY = Mathf.RoundToInt(children.transform.position.y);
-
                 grid[roundedX, roundedY] = children;
             }
         }

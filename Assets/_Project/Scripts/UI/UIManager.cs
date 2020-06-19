@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private Text scoreText;
-    [SerializeField] private Text levelText;
-    [SerializeField] private Text gameOverText;
+    private Text scoreText;
+    private Text levelText;
+    private Text gameOverText;
 
     public Text GameOverText { get => gameOverText; set => gameOverText = value; }
     public Text LevelText { get => levelText; set => levelText = value; }

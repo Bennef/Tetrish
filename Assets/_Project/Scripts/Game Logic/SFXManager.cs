@@ -8,7 +8,7 @@ namespace Tetrish
     public class SFXManager : MonoBehaviour
     {
         private AudioSource aSrc;
-        [SerializeField]  public AudioClip rotate, blockLand, clearLine, gameOver, levelUp;
+        [SerializeField] public AudioClip rotate, blockLand, clearLine, gameOver, levelUp;
 
         void Start() => aSrc = GetComponent<AudioSource>();
 
