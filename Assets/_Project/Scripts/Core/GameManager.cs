@@ -1,20 +1,23 @@
-﻿using System.Collections;
+﻿using Scripts.Audio;
+using Scripts.Environment;
+using System.Collections;
+using Scripts.Inputs;
 using UnityEngine;
 
-namespace Tetrish
+namespace Scripts.Core
 {
     /// <summary>
     /// Manages the Game events.
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        private int currentScore = 0;
-        private int currentLevel = 0;
-        private bool gameIsOver = false;
-        private SpawnTetromino spawner;
-        private SFXManager sFXManager;
-        private UIManager uIManager;
-        private InputHandler inputHandler;
+        private int _currentScore = 0;
+        private int _currentLevel = 0;
+        private bool _gameIsOver = false;
+        private SpawnTetromino _spawner;
+        private SFXManager _sFXManager;
+        private UIManager _uIManager;
+        private InputHandler _inputHandler;
 
         public float FallTime { get; set; } = 0.8f;
 
@@ -23,11 +26,11 @@ namespace Tetrish
         /// </summary>
         void Start()
         {
-            spawner = FindObjectOfType<SpawnTetromino>();
-            sFXManager = FindObjectOfType<SFXManager>();
-            uIManager = FindObjectOfType<UIManager>();
-            inputHandler = FindObjectOfType<InputHandler>();
-            spawner.NewTetromino();
+            _spawner = FindObjectOfType<SpawnTetromino>();
+            _sFXManager = FindObjectOfType<SFXManager>();
+            _uIManager = FindObjectOfType<UIManager>();
+            _inputHandler = FindObjectOfType<InputHandler>();
+            _spawner.NewTetromino();
         }
 
         /// <summary>
@@ -35,10 +38,8 @@ namespace Tetrish
         /// </summary>
         void Update()
         {
-            if (gameIsOver && inputHandler.GetAnyKeyDown())
-            {
+            if (_gameIsOver && _inputHandler.GetAnyKeyDown())
                 ResetGame();
-            }
         }
 
         /// <summary>
@@ -47,9 +48,9 @@ namespace Tetrish
         /// <param name="lines"></param>
         public void AddToScore(int lines)
         {
-            currentScore = currentLevel > 0 ? currentScore += lines * currentLevel * 40 : currentScore += lines * 40;
-            uIManager.SetText(uIManager.ScoreText, currentScore.ToString());            
-            sFXManager.PlaySound(sFXManager.clearLine);
+            _currentScore = _currentLevel > 0 ? _currentScore += lines * _currentLevel * 40 : _currentScore += lines * 40;
+            _uIManager.SetText(_uIManager.ScoreText, _currentScore.ToString());
+            _sFXManager.PlaySound(_sFXManager.ClearLine);
             SetLevel();
         }
 
@@ -59,38 +60,35 @@ namespace Tetrish
         /// <param name="lines"></param>
         public void SetLevel()
         {
-            if (currentScore >= 1000)
+            if (_currentScore >= 1000)
             {
                 SetLevel(5);
                 FallTime = 0.3f;
             }
-            else if (currentScore >= 800)
+            else if (_currentScore >= 800)
             {
                 SetLevel(4);
                 FallTime = 0.4f;
             }
-            else if (currentScore >= 600)
+            else if (_currentScore >= 600)
             {
                 SetLevel(3);
                 FallTime = 0.5f;
             }
-            else if (currentScore >= 200)
+            else if (_currentScore >= 200)
             {
                 SetLevel(2);
                 FallTime = 0.6f;
             }
-            else if (currentScore >= 100)
+            else if (_currentScore >= 100)
             {
                 SetLevel(1);
                 FallTime = 0.7f;
             }
-            uIManager.SetText(uIManager.LevelText, currentLevel.ToString());
+            _uIManager.SetText(_uIManager.LevelText, _currentLevel.ToString());
         }
 
-        private void SetLevel(int levelToSet)
-        {
-            currentLevel = levelToSet;
-        }
+        private void SetLevel(int levelToSet) => _currentLevel = levelToSet;
 
         /// <summary>
         /// Clear the grid of all blocks.
@@ -109,8 +107,8 @@ namespace Tetrish
         /// </summary>
         public void GameOver()
         {
-            sFXManager.PlaySound(sFXManager.gameOver);
-            uIManager.ShowText(uIManager.GameOverText);
+            _sFXManager.PlaySound(_sFXManager.GameOver);
+            _uIManager.ShowText(_uIManager.GameOverText);
             StartCoroutine(GameOverDelay());
         }
 
@@ -121,7 +119,7 @@ namespace Tetrish
         public IEnumerator GameOverDelay()
         {
             yield return new WaitForSeconds(2);
-            gameIsOver = true;
+            _gameIsOver = true;
         }
 
         /// <summary>
@@ -129,12 +127,12 @@ namespace Tetrish
         /// </summary>
         public void ResetGame()
         {
-            gameIsOver = false;
-            uIManager.HideText(uIManager.GameOverText);
-            uIManager.SetText(uIManager.ScoreText, "0");
-            uIManager.SetText(uIManager.LevelText, "0");
+            _gameIsOver = false;
+            _uIManager.HideText(_uIManager.GameOverText);
+            _uIManager.SetText(_uIManager.ScoreText, "0");
+            _uIManager.SetText(_uIManager.LevelText, "0");
             ClearGrid();
-            spawner.NewTetromino();
+            _spawner.NewTetromino();
         }
     }
 }

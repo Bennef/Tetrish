@@ -1,33 +1,36 @@
 ﻿using UnityEngine;
+using Scripts.Core;
+using Scripts.Audio;
+using Scripts.Inputs;
 
-namespace Tetrish
+namespace Scripts.Environment
 {
     /// <summary>
     /// Handles the behaviour of the current active tetromino object. Checks for valid moves, if a line should be cleared, etc.
     /// </summary>
     public class TetrishBlock : MonoBehaviour
     {
-        private InputHandler inputHandler;
-        private static readonly int height = 20;
-        private static readonly int width = 10;
-        private Vector3 rotationPoint;
-        private float previousTime;
-        private float fallTime = 0.8f;
-        private static Transform[,] grid = new Transform[width, height];
-        private GameManager gameManager;
-        private SpawnTetromino spawner;
-        public SFXManager sFXManager;
+        private InputHandler _inputHandler;
+        private static readonly int _height = 20;
+        private static readonly int _width = 10;
+        private Vector3 _rotationPoint;
+        private float _previousTime;
+        private float _fallTime = 0.8f;
+        private static Transform[,] _grid = new Transform[_width, _height];
+        private GameManager _gameManager;
+        private SpawnTetromino _spawner;
+        private SFXManager _sFXManager;
 
         /// <summary>
         /// Set up references.
         /// </summary>
         void OnEnable()
         {
-            sFXManager = FindObjectOfType<SFXManager>();
-            gameManager = FindObjectOfType<GameManager>();
-            spawner = FindObjectOfType<SpawnTetromino>();
-            inputHandler = FindObjectOfType<InputHandler>();
-            fallTime = gameManager.FallTime;
+            _sFXManager = FindObjectOfType<SFXManager>();
+            _gameManager = FindObjectOfType<GameManager>();
+            _spawner = FindObjectOfType<SpawnTetromino>();
+            _inputHandler = FindObjectOfType<InputHandler>();
+            _fallTime = _gameManager.FallTime;
         }
 
         /// <summary>
@@ -35,51 +38,37 @@ namespace Tetrish
         /// </summary>
         void Update()
         {
-            if (inputHandler.GetLeftButtonDown())
-            {
+            if (_inputHandler.GetLeftButtonDown())
                 MoveLeft();
-            }
-            else if (inputHandler.GetRightButtonDown())
-            {
+            else if (_inputHandler.GetRightButtonDown())
                 MoveRight();
-            }
-            else if (inputHandler.GetRotateButtonDown())
-            {
+            else if (_inputHandler.GetRotateButtonDown())
                 Rotate();
-            }
 
-            if (Time.time - previousTime > (inputHandler.GetDownButtonDown() ? fallTime / 10 : fallTime))
-            {
+            if (Time.time - _previousTime > (_inputHandler.GetDownButtonDown() ? _fallTime / 10 : _fallTime))
                 MoveTetrominoDown();
-            }
         }
             
         private void MoveLeft()
         {
             transform.position += new Vector3(-1, 0, 0);
             if (!ValidMove())
-            {
                 transform.position -= new Vector3(-1, 0, 0);
-            }
         }
 
         private void MoveRight()
         {
             transform.position += new Vector3(1, 0, 0);
             if (!ValidMove())
-            {
                 transform.position -= new Vector3(1, 0, 0);
-            }
         }
 
         private void Rotate()
         {
-            transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
+            transform.RotateAround(transform.TransformPoint(_rotationPoint), new Vector3(0, 0, 1), 90);
             if (!ValidMove())
-            {
-                transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
-            }
-            sFXManager.PlaySound(sFXManager.rotate);
+                transform.RotateAround(transform.TransformPoint(_rotationPoint), new Vector3(0, 0, 1), -90);
+            _sFXManager.PlaySound(_sFXManager.Rotate);
         }
 
         /// <summary>
@@ -91,22 +80,18 @@ namespace Tetrish
             if (!ValidMove())
             {
                 transform.position -= new Vector3(0, -1, 0);
-                sFXManager.PlaySound(sFXManager.blockLand);
+                _sFXManager.PlaySound(_sFXManager.BlockLand);
 
                 AddToGrid();
                 CheckForLines();
                                 
                 if (GameOverCheck())
-                {
-                    gameManager.GameOver();
-                }
+                    _gameManager.GameOver();
                 else
-                {
-                    spawner.NewTetromino();
-                }
+                    _spawner.NewTetromino();
                 this.enabled = false;
             }
-            previousTime = Time.time;
+            _previousTime = Time.time;
         }
 
         /// <summary>
@@ -115,7 +100,7 @@ namespace Tetrish
         void CheckForLines()
         {
             int lineCounter = 0;
-            for (int i = height - 1; i >= 0; i--)
+            for (int i = _height - 1; i >= 0; i--)
             {
                 if (HasLine(i))
                 {
@@ -127,9 +112,7 @@ namespace Tetrish
 
             // If we have at least one line, update the score.
             if (lineCounter > 0)
-            {
-                gameManager.AddToScore(lineCounter);
-            }
+                _gameManager.AddToScore(lineCounter);
         }
 
         /// <summary>
@@ -139,12 +122,10 @@ namespace Tetrish
         /// <returns></returns>
         bool HasLine(int i)
         {
-            for (int j = 0; j < width; j++)
+            for (int j = 0; j < _width; j++)
             {
-                if (grid[j, i] == null)
-                {
+                if (_grid[j, i] == null)
                     return false;
-                }
             }
             return true;
         }
@@ -155,10 +136,10 @@ namespace Tetrish
         /// <param name="i"></param>
         void DeleteLine(int i)
         {
-            for (int j = 0; j < width; j++)
+            for (int j = 0; j < _width; j++)
             {
-                Destroy(grid[j, i].gameObject);
-                grid[j, i] = null;
+                Destroy(_grid[j, i].gameObject);
+                _grid[j, i] = null;
             }
         }
 
@@ -168,15 +149,15 @@ namespace Tetrish
         /// <param name="i"></param>
         void RowDown(int i)
         {
-            for (int y = i; y < height; y++)
+            for (int y = i; y < _height; y++)
             {
-                for (int j = 0; j < width; j++)
+                for (int j = 0; j < _width; j++)
                 {
-                    if (grid[j, y] != null)
+                    if (_grid[j, y] != null)
                     {
-                        grid[j, y - 1] = grid[j, y];
-                        grid[j, y] = null;
-                        grid[j, y - 1].transform.position -= new Vector3(0, 1, 0);
+                        _grid[j, y - 1] = _grid[j, y];
+                        _grid[j, y] = null;
+                        _grid[j, y - 1].transform.position -= new Vector3(0, 1, 0);
                     }
                 }
             }
@@ -191,7 +172,7 @@ namespace Tetrish
             {
                 int roundedX = Mathf.RoundToInt(children.transform.position.x);
                 int roundedY = Mathf.RoundToInt(children.transform.position.y);
-                grid[roundedX, roundedY] = children;
+                _grid[roundedX, roundedY] = children;
             }
         }
 
@@ -206,10 +187,12 @@ namespace Tetrish
                 int roundedX = Mathf.RoundToInt(children.transform.position.x);
                 int roundedY = Mathf.RoundToInt(children.transform.position.y);
 
-                if (roundedX < 0 || roundedX >= width || roundedY < 0 || roundedY >= height || grid[roundedX, roundedY] != null)
-                {
+                if (roundedX < 0 || 
+                    roundedX >= _width || 
+                    roundedY < 0 || 
+                    roundedY >= _height || 
+                    _grid[roundedX, roundedY] != null)
                     return false;
-                }
             }
             return true;
         }
@@ -220,10 +203,8 @@ namespace Tetrish
         /// /// <returns>True if block in the way, false if not.</returns>
         public bool GameOverCheck()
         {
-            if (grid[4, 18] != null)
-            {
+            if (_grid[4, 18] != null)
                 return true;
-            }
             return false;
         }
     }

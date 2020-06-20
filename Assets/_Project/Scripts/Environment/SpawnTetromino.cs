@@ -1,20 +1,22 @@
 ﻿using UnityEngine;
 
-namespace Tetrish
+namespace Scripts.Environment
 {
     /// <summary>
     /// A script to handle the spawning of a new random tetromino.
     /// </summary>
     public class SpawnTetromino : MonoBehaviour
     {
-        public GameObject[] Tetrominos;
+        public GameObject[] _tetrominos;
 
         /// <summary>
         /// Spawn a random tetromino at the top of the screen.
         /// </summary>
         public void NewTetromino()
         {
-            Instantiate(Tetrominos[Random.Range(0, Tetrominos.Length)], transform.position, Quaternion.identity);
+            Instantiate(_tetrominos[Random.Range(0, _tetrominos.Length)], 
+                transform.position, 
+                Quaternion.identity);
         }
     }
 }
